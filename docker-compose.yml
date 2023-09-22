@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_DATABASE=todo-list-manager-db
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=docker
+      - MYSQL_ROOT_PASSWORD=docker
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db-dump/:/docker-entrypoint-initdb.d
+
+  api:
+    build: ./api/.
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver
+    depends_on:
+      - db
